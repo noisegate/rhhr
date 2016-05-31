@@ -1,5 +1,6 @@
 import curses
 from time import sleep
+import sys, getopt
 import rhhr
 
 class Box(object):
@@ -129,11 +130,41 @@ class Interface(object):
         self.screen.clear()
         self.screen.refresh()
         curses.endwin()
-        ser.close()
+        sys.exit()
+
+class Handleargs(object):
+	
+    #http://www.tutorialspoint.com/python/python_command_line_arguments.htm
+    def __init__(self, argv):
+        self.argv = argv
+
+    def process(self):
+        try:
+            opts, args = getopt.getopt(self.argv,"hf:",["ifile=","ofile="])
+        except getopt.GetoptError:
+             print 'interface.pu -f <ini filename> '
+             sys.exit(2)
+        for opt, arg in opts:
+            if opt == '-h':
+                f=open('help.txt', 'r')
+                for line in f.readlines():
+                    print line,
+                f.close()
+                sys.exit()
+            if opt == '-f':
+                #arg
+                print "executed command: {0}".format(arg)
+                #sys.exit(1)
+                return arg
 
 if __name__ == "__main__":
-   
-    game = rhhr.Game("./ini.txt")
+
+    handler = Handleargs(sys.argv[1:])
+    filename = handler.process()
+    
+    print "opening ini file {0}".format(filename)
+    
+    game = rhhr.Game(filename)
 
     i = Interface(game)
     i.loop()
