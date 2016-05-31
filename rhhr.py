@@ -32,8 +32,15 @@ class NoredcarError(Exception):
     def __str__(self):
         return repr("help, cant find the red car")
 
+class NoInstances(type):
+    def __call__(self, *args, **kwargs):
+        raise TypeError("Can't instantiate directly")
+
 class Que(object):
     #FIFO
+
+    __metaclass__ = NoInstances
+
     boards = []
 
     current = 0

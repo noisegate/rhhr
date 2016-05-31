@@ -36,7 +36,9 @@ class Field(object):
         self.height = height
         self.screen = screen
         self.board = Box(self.screen, x, y, width, height)
-        
+        self.bsx = int(width/6)
+        self.bsy = int(height/6)
+
     def draw(self):
 
         self.screen.clear()
@@ -45,7 +47,7 @@ class Field(object):
         self.screen.addstr(2,0,"q=quit, s=solve, r=repeat solution")
         for x in range(6):
             for y in range(6):
-                self.screen.addch(2+self.y+5*y,5+self.x+10*x, ".")
+                self.screen.addch(2+self.y+self.bsy*y,5+self.x+self.bsx*x, ".")
 
     def drawbox(self, x, y, w, h, color):
 
@@ -62,9 +64,9 @@ class Field(object):
             if car.name == -1:
                 i = 11
             if car.direction ==0:
-                self.drawbox(self.x+10*x+1, self.y + 5*y+1, car.size*10-2, 5-2, i)
+                self.drawbox(self.x+self.bsx*x+1, self.y + self.bsy*y+1, car.size*self.bsx-2, self.bsy-2, i)
             else:
-                self.drawbox(self.x+10*x+1, self.y + 5*y+1, 10-2, 5*car.size-2, i)
+                self.drawbox(self.x+self.bsx*x+1, self.y + self.bsy*y+1, self.bsx-2, self.bsy*car.size-2, i)
 
 
 class Interface(object):
@@ -156,6 +158,8 @@ class Handleargs(object):
                 print "executed command: {0}".format(arg)
                 #sys.exit(1)
                 return arg
+        print "no filename"
+        sys.exit()
 
 if __name__ == "__main__":
 
